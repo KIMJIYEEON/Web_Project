@@ -1,0 +1,275 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>
+        Movie Introduction
+    </title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Song+Myung" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Rozha+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
+
+    <style>
+        body {
+            padding-top: 10px;
+            margin-top: 10px;
+            margin: 0;
+            font-family: 'Song Myung', serif;
+            font-weight: 400;
+            line-height: 1.5;
+            color: black;
+            text-align: left;
+            background-color: white;
+            width: 100%;
+        }
+
+        .container {
+            width: 1140px;
+        }
+
+        .blog-header {
+            line-height: 1;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .blog-header-logo {
+            font-size: 3em;
+            text-align: center;
+            padding-left: 345px;
+        }
+
+        .col-4 > a {
+            text-decoration: none;
+        }
+
+        .collapse > ul > li {
+            width: 250px;
+            padding-left: 40px;
+        }
+
+        .dropdown-menu {
+            margin-left: 35px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .dropdown-item:hover {
+            background-color: #e5e5e5;
+        }
+
+        .nav-link:hover {
+            width: 150px;
+            border-radius: 5px 5px 5px 5px;
+            background: #ffd800;
+        }
+
+        button {
+            opacity: 0.8;
+        }
+
+        .main {
+            margin: 25px;
+            margin-left: 269px;
+            margin-top: 20px;
+            width: 979px;
+            height: 220px;
+            background: #ffd44b;
+            padding: 20px;
+            padding-left: 30px;
+            font-family: 'Rozha One', serif;
+            color: #555555;
+            border-radius: 5px 5px 5px 5px;
+        }
+
+            .main > h1 {
+                font-size: 3em;
+                line-height: 90%;
+            }
+
+            .main > h5 {
+                font-family: 'Alegreya Sans', sans-serif;
+                line-height: 90%;
+            }
+
+        hr {
+            width: 980px;
+            color: #e5e5e5;
+        }
+
+        .col-md-12 {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        .figure {
+            margin-left: 35px;
+        }
+
+            .figure > a > img:hover {
+                width: 302px;
+                height: 202px;
+                box-shadow: 5px 5px 0 #ffd44b;
+            }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="container">
+        <header class="blog-header py-3">
+            <div class="row flex-nowrap justify-content-between align-items-center">
+                <div class="col-4 text-center">
+                    <a class="blog-header-logo text-dark" href="Movie Introduction.html">Movie&nbsp;Introduction</a>
+                </div>
+                <!-- 검색창 -->
+                <div class="col-4 d-flex justify-content-end align-items-center">
+                    <form class="form-inline my-2 my-lg-0" action="http://search.naver.com/search.naver" method="get">
+                        <input type="hidden" id="sm" name="sm" value="top_hty">
+                        <input type="hidden" id="fbm" name="fbm" value="0">
+                        <input type="hidden" id="acr" name="acr" value="" disabled="disabled">
+                        <input type="hidden" id="acq" name="acq" value="" disabled="disabled">
+                        <input type="hidden" id="qdt" name="qdt" value="" disabled="disabled">
+                        <input type="hidden" id="ie" name="ie" value="utf8">
+                        <input type="hidden" id="acir" name="acir" value="" disabled="disabled">
+                        <input type="hidden" id="os" name="os" value="" disabled="disabled">
+                        <input type="hidden" id="bid" name="bid" value="" disabled="disabled">
+                        <input type="hidden" id="pkid" name="pkid" value="" disabled="disabled">
+                        <input type="hidden" id="eid" name="eid" value="" disabled="disabled">
+                        <input type="hidden" id="mra" name="mra" value="" disabled="disabled">
+                        <span class="green_window">
+                            <input class="form-control mr-sm-2" name="query" type="search" placeholder="Search" aria-label="Search" maxlength="255" tabindex="1" accesskey="s" style="ime-mode:active;" autocomplete="off" onclick="document.getElementById('fbm').value=1;" value="">
+                            <button type="submit" class="btn btn-outline-warning">Search</button>
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </header>
+    </div>
+    <!-- 메뉴 -->
+    <nav class="navbar navbar-expand-sm navbar-light" style="background-color: white">
+        <a class="navbar-brand" href="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarsupportedcontent" aria-controls="navbarsupportedcontent"
+                aria-expanded="false" aria-label="toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsupportedcontent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Romance
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="어바웃타임.html">어바웃 타임</a>
+                        <a class="dropdown-item" href="그 시절, 우리가 좋아했던 소녀.html">그 시절, 우리가 좋아했던 소녀</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Action/SF
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="아이언맨1.html">아이언맨</a>
+                        <a class="dropdown-item" href="메이즈 러너.html">메이즈 러너</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Comedy
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="완벽한 타인.html">완벽한 타인</a>
+                        <a class="dropdown-item" href="써니.html">써니</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Horror/Thriller
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="곡성.html">곡성</a>
+                        <a class="dropdown-item" href="오펀 천사의 비밀.html">오펀: 천사의 비밀</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Animaition
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="하울의 움직이는 성.html">하울의 움직이는 성</a>
+                        <a class="dropdown-item" href="센과 치히로의 행방불명.html">센과 치히로의 행방불명</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main">
+        <h1><i>A variety of movies</i></h1>
+        <h1><i>divided by genre</i></h1>
+        <h5>Look at the world from various perspectives.</h5>
+        <h5>The movie is another world.</h5>
+        <h5>Movies satisfy all senses.</h5>
+    </div>
+    <hr />
+    <!-- 본문 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <figure class="figure">
+                    <a href="어바웃타임.html"><img src="메인어바웃타임.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| About Time, 2013</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="하울의 움직이는 성.html"><img src="메인하울.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| Howl's Moving Castle, 2004</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="아이언맨1.html"><img src="메인아이언맨.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| Iron Man, 2008, 2010, 2013</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="메이즈 러너.html"><img src="메인메이즈러너.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| The Maze Runner, 2014, 2015, 2017</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="완벽한 타인.html"><img src="메인타인.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| Intimate Strangers, 2013</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="써니.html"><img src="메인써니.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| Sunny, 2011</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="센과 치히로의 행방불명.html"><img src="메인치히로.png" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| The Spiriting Away Of Sen And Chihiro, 2001</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="오펀 천사의 비밀.html"><img src="메인오펀.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| Orphan, 2009</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="그 시절, 우리가 좋아했던 소녀.html"><img src="메인그시절.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| You Are the Apple of My Eye, 2011</figcaption>
+                </figure>
+                <figure class="figure">
+                    <a href="곡성.html"><img src="메인곡성.jpg" width="300" height="200" class="figure-img img-fluid rounded"></a>
+                    <figcaption class="figure-caption">| THE WAILING, 2016</figcaption>
+                </figure>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
