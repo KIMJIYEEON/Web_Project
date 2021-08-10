@@ -1,0 +1,33 @@
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+	
+	$num = trim(strip_tags(addslashes($_POST['num'])));
+	$c_num = trim(strip_tags(addslashes($_POST['c_num'])));
+	$c_content =trim(strip_tags(addslashes( $_POST['writecontent'])));
+
+	$query1 = "update comment set content=? where c_num=?";
+	$stmt = mysqli_prepare($link, $query1);
+	$bind = mysqli_stmt_bind_param($stmt, "si", $c_content, $c_num) || die("bind error");
+	$exec = mysqli_stmt_execute($stmt);
+	//$result = mysqli_query($link, $query1)or die("query1 error(c_modify), $c_num");
+
+	if($exec) {
+		echo 
+		"<script>
+			alert('수정 완료!');
+			location.href='/~kimjeey1020/project/board_read.php?num=$num';
+		</script>";
+	}
+	mysqli_stmt_close($stmt);
+?>

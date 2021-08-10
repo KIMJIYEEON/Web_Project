@@ -1,0 +1,73 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	h1 { color: #6464CD;	padding: 20px; margin-top: 2%; }
+	body { padding: 0px; margin: 0px; background: #F0F8FF; }
+	#modify { position: absolute; margin-left: 27%; }
+	#d_content { margin-top: 3px;}
+	button { background: #B0C4DE; width: 100px; height: 35px; }
+	#d_submit { float: right; margin-top: 10px; }
+	#d_list { margin-top: 80px; }
+</style>
+</head>
+<center><body>
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+	
+	$num = trim(strip_tags(addslashes($_GET['num'])));
+	$pwd = trim(strip_tags(addslashes($_GET['pwd'])));
+
+	$query1 = "select * from list where num=$num";
+	$result = mysqli_query($link, $query1)or die("query1 error(board_read)");
+	$row = mysqli_fetch_assoc($result);
+
+	$title = $row['title'];
+	$content = $row['content'];
+	$dbpwd = $row['pwd'];
+
+	if($dbpwd === $pwd) {
+?>
+		<h1>글 수정</h1>
+			<div id="modify">
+				<form action="modify.php" method="POST">
+					<div id="d_title">
+						<textarea name="title" rows="3" cols="120" style="resize: none;"><?php echo $title ?></textarea>
+					</div>
+					<div id="d_content">
+						<textarea name="content" rows="30" cols="120" style="resize: none;"><?php echo $content ?></textarea>
+					</div>
+					<input type=hidden name="num" value="<?php echo $num ?>"></input>
+					<div id="d_submit">
+						<button type=submit>수정</button>
+					</div>
+				</form>
+			<div id = "d_list">
+				<a href="javascript:history.back();"><button>이전으로</button></a>
+			</div>
+			</div>
+<?php
+	}
+	else {
+		echo
+		"<script>
+			alert('Wrong! 비밀번호가 틀립니다.');
+			location.href='/~kimjeey1020/project/board_read.php?num=$num';
+		</script>";
+	}
+	mysqli_stmt_close($stmt);
+	mysqli_close($link);
+?>
+</body></center>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F0F8FF; }
+	table { background: white; margin-top: 60px; border-collapse: collapse; }
+	h2 { text-align: center; margin-top: 20px; }
+	h3 { text-align: center; margin-top: 20px; }
+	#d_name { float: left; margin-left: 10px; }
+	#d_date { float: right; margin-right: 10px; }
+	#d_see { float: right; margin-right: 10px; }
+	#d_content { text-align: left; width: 900px; height: 350px; padding: 10px; }
+	#d_pwd { float: right; }
+	button { width: 100px; height: 35px; }
+	#d_modify { float: right; margin-left: 10px; margin-right: 10px; }
+	#d_delete { float: right; }
+	#d_list { padding: 30px; }
+
+	#c_name { float: left; margin-left: 10px; }
+	#c_content { margin-left: 10px; }
+	#c_date { float: left; margin-left: 10px; }
+	#c_pwd { float: right; }
+	#c_modify { float: right; margin-left: 10px; margin-right: 10px; }
+	#c_delete { float: right; margin-right: 10px; }
+}
+</style>
+</head>
+<center><body>
+<?php
+		//DB에 연결
+		$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+		//DB 연결 체크
+		if ($mysqli->connect_errno) {
+	    	printf("Connect failed: %s\n", $mysqli->connect_error);
+	    	exit();
+		} 
+		//print("Successfully connected !\n");
+		//DB 선택
+		$dbname = "kimjeey1020";
+		mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+		$num = trim(strip_tags(addslashes($_GET['num'])));
+
+		$query1 = "select * from list where num=$num";
+		$result = mysqli_query($link, $query1)or die("query1 error(board_read)");
+		$row = mysqli_fetch_assoc($result);
+
+		$query2 = "update list set see=see+1 where num=?";
+		$stmt2 = mysqli_prepare($link, $query2);
+		$bind2 = mysqli_stmt_bind_param($stmt2, "i", $num) || die("bind2 error");
+		$exec2 = mysqli_stmt_execute($stmt2);
+		mysqli_stmt_close($stmt2);
+?>
+<!----------------------------게시글 부분---------------------------->
+<table border="1">
+	<thead>
+		<tr style="background: #B0C4DE;">
+	 		<th width="900"><h2><?php echo $row['title'] ?></h2></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><div id = "d_name"> 작성자: <?php echo $row['name'] ?> </div>
+			<div id = "d_ip" style="font-size: 70%;">(ip:<?php echo $row['ip']; ?>)</div>
+			<div id = "d_see"> 조회수: <?php echo $row['see'] ?> </div>
+			<div id = "d_date"> <?php echo $row['date'] ?> </div></td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td><div id = "d_content" style="overflow-x: hidden; overflow-y: scroll;">
+				<?php echo $row['content'] ?>
+			</div></td>
+		</tr>
+		<tr>
+			<td>
+				<form method="GET">
+					<div id = "d_delete">
+						<button type=submit formaction="delete.php">삭제</button>
+					</div>
+					<div id = "d_modify">
+						<button type=submit formaction="board_modify.php">수정</button>
+					</div>
+					<div id = "d_pwd">
+						<textarea name="pwd" rows="2" placeholder="Password" style="resize: none;"></textarea>
+					</div>
+					<input type=hidden name="num" value="<?php echo $num ?>"></input>
+				</form>
+			</td>
+		</tr>
+	</tfoot>
+</table>
+<?php
+?>
+<!----------------------------댓글 목록---------------------------->
+<table border="1" style="margin-top: 15px;">
+	<tr>
+		<td width="920" colspan="2" style="background: #B0C4DE;">
+			<h3>댓글</h3>
+		</td>
+	</tr>
+<?php
+	$query3 = "select * from comment where num=$num";
+	$result = mysqli_query($link, $query3)or die("query3 error(board_read)");
+
+	while($row=mysqli_fetch_assoc($result)) {
+?>
+	<tr>
+		<td width="200">
+			<div id = "c_name"><b><?php echo $row['name']; ?></b></div>
+			<div id = "c_ip" style="font-size: 70%;">(ip:<?php echo $row['ip']; ?>)</div>
+		</td>
+		<td>
+			<div id = "c_date" style="font-size: 70%;">(<?php echo $row['date']; ?>)</div>
+			<form method="GET">
+				<div id = "c_delete">
+					<input type=submit value="삭제" formaction="c_delete.php"></input>
+				</div>
+				<div id = "c_modify">
+					<input type=submit value="수정" formaction="comment_modify.php"></input>
+				</div>
+				<div id = "c_pwd">
+					<textarea name="c_pwd" rows="1" placeholder="Password" style="height: 25px; resize: none;"></textarea>
+				</div>
+				<input type=hidden name="num" value="<?php echo $num ?>"></input>
+				<input type=hidden name="c_num" value="<?php echo $row['c_num']; ?>"></input>
+			</form>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<div id = "c_content" style="height: 100px; overflow-x: hidden; overflow-y: scroll;"><?php echo $row['content']; ?></div>
+		</td>
+	</tr>
+<?php
+	}
+?>
+</table>
+
+<!----------------------------댓글 쓰기---------------------------->
+<table border="0" style="margin-top: 15px;">
+	<form action="comment_write.php" method="POST">	
+	<tr>
+		<td>
+			<div id = "c_writename">
+				<textarea name="writename" rows="2" placeholder="Name" style="height: 37px; resize: none;"></textarea>
+			</div>
+		</td>
+		<td rowspan="2">
+			<div id = "c_writecontent">
+				<textarea name="writecontent" rows="5" cols="82" placeholder="댓글 내용을 입력하세요." style="overflow-x: hidden; overflow-y: scroll;"></textarea>
+			</div>
+		</td>
+		<td rowspan="2">
+			<button type=submit style="width: 165px; height: 80px; font-size: 13pt; background: #B0C4DE;">작성</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div id = "c_writepwd">
+				<textarea name="writepwd" rows="2" placeholder="Password" style="height: 37px; resize: none;"></textarea>
+			</div>		
+		</td>
+	</tr>
+	<input type=hidden name="num" value="<?php echo $num ?>"></input>
+	</form>
+</table>
+
+<!----------------------------List---------------------------->
+<div id = "d_list">
+	<a href="board_list.php?page=1"><button style="background: #B0C4DE;">목록으로</button></a>
+</div>
+</body></center>
+</html>

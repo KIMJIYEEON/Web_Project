@@ -1,0 +1,70 @@
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+	
+	$num = trim(strip_tags(addslashes($_GET['num'])));
+	$c_num = trim(strip_tags(addslashes($_GET['c_num'])));
+	$c_pwd = trim(strip_tags(addslashes($_GET['c_pwd'])));
+
+	$query1 = "select * from comment where c_num=$c_num";
+/*	$stmt = mysqli_prepare($link, $query1);
+	$bind = mysqli_stmt_bind_param($stmt, "i", $c_num) || die("bind error");
+	$exec = mysqli_stmt_execute($stmt);
+	$bindr = mysqli_stmt_bind_result($stmt, $row['num'], $row['c_num'], $row['name'], $row['pwd'], $row['content'], $row['date']);
+*/	$result = mysqli_query($link, $query1)or die("query1 error(comment_modify), $c_num");
+	$row = mysqli_fetch_assoc($result);
+
+	$c_content = $row['content'];
+	$c_dbpwd = $row['pwd'];
+
+	if($c_dbpwd === $c_pwd) {
+?>
+<html>
+<head>
+<style>
+	body { background: #F0F8FF; }
+	button { background: #B0C4DE; }
+</style>
+</head>
+<body>
+		<center>
+		<h2 style="color: #6464CD;	margin-top: 50px;">댓글 수정</h2>
+		<table border="0">
+			<form action="c_modify.php" method="POST">	
+			<tr>
+				<td width="590" rowspan="2">
+					<div id = "c_writecontent">
+						<textarea name="writecontent" rows="5" cols="82" style="overflow-x: hidden; overflow-y: scroll; resize: none;"><?php echo $row['content']; ?></textarea>
+					</div>
+				</td>
+				<td width="160" rowspan="2">
+					<button type=submit style="width: 160px; height: 80px;">수정</button>
+				</td>
+			</tr>
+			<input type=hidden name="num" value="<?php echo $num; ?>"></input>
+			<input type=hidden name="c_num" value="<?php echo $c_num; ?>"></input>
+			</form>
+		</table>
+		</center>
+</body>
+</html>
+<?php
+	}
+	else {
+		echo
+		"<script>
+			alert('비밀번호가 틀립니다.');
+			location.href='/~kimjeey1020/project/board_read.php?num=$num';
+		</script>";
+	}
+?>

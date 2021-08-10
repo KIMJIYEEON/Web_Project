@@ -1,0 +1,51 @@
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+	$query4 = "alter table list auto_increment = 1";
+	mysqli_query($link, $query4)or die("query4 error(write)");
+
+	$title = trim(strip_tags(addslashes($_POST['title'])));
+	$content = trim(strip_tags(addslashes($_POST['content'])));
+	$name = trim(strip_tags(addslashes($_POST['name'])));
+	$pwd = trim(strip_tags(addslashes($_POST['pwd'])));
+	date_default_timezone_set('Asia/Seoul');
+	$date = date('Y-m-d');
+	$ip = $_SERVER["REMOTE_ADDR"];
+
+	$query1 = "select * from list";
+	$result = mysqli_query($link, $query1)or die("query1 error(write)");
+	$num = mysqli_num_rows($result);
+
+	if($title && $content && $name && $pwd) {
+		$query3 = "insert into list(title, name, date, see, content, pwd, ip) values(?, ?, ?, 0, ?, ?, ?)";
+		$stmt = mysqli_prepare($link, $query3);
+		$bind = mysqli_stmt_bind_param($stmt, "ssssss", $title, $name, $date, $content, $pwd, $ip) || die("bind error1");
+		$exec = mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		
+		//$result = mysqli_query($link, $query3)or die("query3 error(write), $num");
+		echo 
+		"<script>
+			alert('글이 작성되었습니다.');
+			location.href='/~kimjeey1020/project/board_list.php?page=1';
+		</script>";
+	}
+	else {
+		echo
+		"<script>
+			alert('글 작성을 실패하였습니다.');
+			history.back();
+		</script>";
+	}
+?>

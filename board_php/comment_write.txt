@@ -1,0 +1,50 @@
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+	$query3 = "alter table comment auto_increment =1";
+	mysqli_query($link, $query3)or die("query3 error(comment_write)");
+
+	$num = trim(strip_tags(addslashes($_POST['num'])));
+	$name = trim(strip_tags(addslashes($_POST['writename'])));
+	$pwd = trim(strip_tags(addslashes($_POST['writepwd'])));
+	$content = $_POST['writecontent'];
+	date_default_timezone_set('Asia/Seoul');
+	$date = date("Y-m-d h:i:s");
+	$ip = $_SERVER["REMOTE_ADDR"];
+
+	$query1 = "select * from comment";
+	$result = mysqli_query($link, $query1)or die("query1 error(comment_write)");
+	$c_num = mysqli_num_rows($result);
+
+	if($name && $pwd && $content) {
+		$query2 = "insert into comment(num, name, pwd, content, date, ip) values(?, ?, ?, ?, ?, ?)";
+		$stmt = mysqli_prepare($link, $query2);
+		$bind = mysqli_stmt_bind_param($stmt, "isssss", $num, $name, $pwd, $content, $date, $ip) || die("bind error");
+		$exec = mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+
+		//$result = mysqli_query($link, $query2)or die("query2 error(comment_write), $c_num");
+		echo 
+		"<script>
+			location.href='/~kimjeey1020/project/board_read.php?num=$num';
+		</script>";
+	}
+	else {
+		echo
+		"<script>
+			alert('내용(이름, 비밀번호, 댓글 내용)을 작성해주세요.');
+			history.back();
+		</script>";
+	}
+?>

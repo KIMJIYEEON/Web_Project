@@ -1,0 +1,50 @@
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+	$num = trim(strip_tags(addslashes($_GET['num'])));
+	$pwd = trim(strip_tags(addslashes($_GET['pwd'])));
+
+	$query1 = "select * from list where num=$num";
+	$result = mysqli_query($link, $query1)or die("query1 error(delete), $num");
+	$row = mysqli_fetch_assoc($result);
+
+	$dbpwd = $row['pwd'];
+
+	if($dbpwd === $pwd) {
+		$query2 = "delete from list where num=?";
+		$stmt = mysqli_prepare($link, $query2);
+		$bind = mysqli_stmt_bind_param($stmt, "i", $num) || die("bind error");
+		$exec = mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		//$result = mysqli_query($link, $query2)or die("query2 error(delete)");
+		$query3 = "delete from comment where num=?";
+		$stmt = mysqli_prepare($link, $query3);
+		$bind = mysqli_stmt_bind_param($stmt, "i", $num) || die("bind error");
+		$exec = mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+
+		echo
+		"<script>
+			alert('삭제 완료!');
+			location.href='/~kimjeey1020/project/board_list.php';
+		</script>";
+	}
+	else {
+		echo
+		"<script>
+			alert('비밀번호가 틀립니다.');
+			location.href='/~kimjeey1020/project/board_read.php?num=$num';
+		</script>";
+	}
+?>

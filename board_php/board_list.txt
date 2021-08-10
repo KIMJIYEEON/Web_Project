@@ -1,0 +1,148 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F0F8FF; }
+	table { background: white; border-top: 1px solid #444444; border-collapse: collapse; }
+  	th, td { border-bottom: 1px solid #444444; }
+	a { color: #6464CD; text-decoration: none; }
+	a:hover { color: #B0C4DE; }
+	h1 { color: #6464CD;	padding: 20px; margin-top: 2%; }
+	#top { margin-left: 44.5%; }
+	#middle { padding: 10px; margin-bottom: 10px; }
+	thead { background: #B0C4DE; }
+	form { padding: 10px; }
+	button { background: #B0C4DE; width: 100px; height: 35px; }
+	input { height: 25px; }
+</style>
+</head>
+<center><body>
+	<?php
+		//DB에 연결
+		$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+		//DB 연결 체크
+		if ($mysqli->connect_errno) {
+	    	printf("Connect failed: %s\n", $mysqli->connect_error);
+	    	exit();
+		} 
+		//print("Successfully connected !\n");
+		//DB 선택
+		$dbname = "kimjeey1020";
+		mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+	?>
+
+<h1>게시판</h1>
+<div id="board">
+	<!--상단(글쓰기 버튼)-->
+	<div id="top">
+
+	</div>
+	<!--중단(글 목록)-->
+	<div id="middle" style="width: 940px;">
+		<a href="board_write.php" style="float: right;"><button>글쓰기</button></a><br/><br/>
+	<table border="0">
+		<thead>
+		<tr>
+			<th width="80" height="40">번호</th>
+         	<th width="500">제목</th>
+      	   	<th width="120">작성자</th>
+      	   	<th width="120">작성일</th>
+         	<th width="120">조회수</th>
+		</tr>
+		</thead>
+		<?php
+			if(isset($_GET['page'])) {
+				$page = trim(strip_tags(addslashes($_GET['page'])));
+			}
+			else {
+				$page = 1;
+			}
+			$query1 = "select * from list";
+			$result = mysqli_query($link, $query1)or die("query1 error(board_list)");
+			$total_num = mysqli_num_rows($result);
+			$seelist = 10;
+			$seeblock = 5;
+
+			//now block
+			$block = ceil($page/$seeblock);
+
+			//now block-start block num/end block num
+			$start_block = (($block - 1) * $seeblock) + 1;
+			$end_block = $start_block + $seeblock - 1;
+
+			//total page/total block
+			$cnt_page = ceil($total_num/$seelist);
+			$cnt_block = ceil($cnt_page/$seeblock);
+
+			if($end_block > $cnt_page) $end_block = $cnt_page;
+			$start_num= ($page - 1) * $seelist;
+
+			$query2 = "select * from list order by num desc limit ?, ?";
+			$stmt = mysqli_prepare($link, $query2);
+			$bind = mysqli_stmt_bind_param($stmt, "ii", $start_num, $seelist) || die("bind error");
+			$exec = mysqli_stmt_execute($stmt);
+			$bindr = mysqli_stmt_bind_result($stmt, $row['num'], $row['title'], $row['name'], $row['date'], $row['see'], $row['content'], $row['pwd'], $row['ip']);
+
+			$no = $total_num;
+
+			while(mysqli_stmt_fetch($stmt)) {
+				$number = $no - ($page - 1) * $seelist;
+		?>
+				<tbody style="text-align: center;">
+					<tr>
+					<td height="30"><?php echo $number ?></td>
+			 	<td height="30">
+						<a href="board_read.php?num=<?php echo $row['num'] ?>">
+						<?php echo $row['title'] ?>
+						</a>
+					</td>
+		      	   	<td height="30"><?php echo $row['name'] ?></td>
+		      	   	<td height="30"><?php echo $row['date'] ?></td>
+			 	<td height="30"><?php echo $row['see'] ?></td>
+					</tr>
+				</tbody>
+		<?php
+				$no--;
+			}
+			mysqli_stmt_close($stmt);
+		?>
+	</table>
+	</div>
+	<!--하단(페이지, 검색)-->
+	<div id="bottom">
+		<?php
+			echo "<a href='$_SERVER[PHP_SELF]?page=1'>[처음] </a>"; 
+			if($page > 1) {
+				$pre = $page - 1;
+				echo "<a href='$_SERVER[PHP_SELF]?page=$pre'>[이전] </a>"; 
+			}
+
+			for($i=$start_block; $i<=$end_block; $i++) {
+				if($page == $i) {
+					echo "<b><u> $i</u></b>";
+				}
+				else {
+					echo "<a href='$_SERVER[PHP_SELF]?page=$i'><b> $i </b></a>";
+				}
+			}
+
+			if($block < $cnt_block || $page < $cnt_page) {
+				$next = $page + 1;
+				echo "<a href='$_SERVER[PHP_SELF]?page=$next'> [다음]</a>";
+			}
+			echo "<a href='$_SERVER[PHP_SELF]?page=$cnt_page'> [끝]</a>";
+		?>
+		<form action="search.php" method="GET">
+	      <select name="option" style="height: 25px;">
+			<option value="title">제목</option>
+			<option value="name">작성자</option>
+			<option value="content">내용</option>
+	      </select>
+			<input type=text name="search"></input>
+			<button type=submit style="height: 25px; margin-top: 20px;">Search</button>
+		</form>
+	</div>
+</div>
+</body></center>
+</html>

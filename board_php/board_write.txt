@@ -1,0 +1,42 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F0F8FF; }
+	h1 { color: #6464CD;	padding: 20px; margin-top: 2%; }
+	body { padding: 0px; margin: 0px; }
+	#write { position: absolute; margin-left: 27%; }
+	#d_content { margin-top: 3px;}
+	#d_name { float: left; margin-top: 10px; }
+	#d_pwd { float: left; padding: 10px; }
+	button { background: #B0C4DE; width: 100px; height: 35px; }
+	#d_submit { float: right; margin-top: 10px; }
+	#d_list { margin-top: 80px; float: middle; }
+</style>
+</head>
+<center><body>
+	<h1>글쓰기</h1>
+	<div id="write">
+		<form action="write.php" method="POST">
+			<div id="d_title">
+				<textarea name="title" rows="3" cols="120" placeholder="제목을 입력하세요." style="resize: none;"></textarea>
+			</div>
+			<div id="d_content">
+				<textarea name="content" rows="30" cols="120" placeholder="내용을 입력하세요." style="resize: none;"></textarea>
+			</div>
+			<div id="d_name">
+				<textarea name="name" rows="2" placeholder="Name" style="resize: none;"></textarea>
+			</div>
+			<div id="d_pwd">
+				<textarea name="pwd" rows="2" placeholder="Password" style="resize: none;"></textarea>
+			</div>
+			<div id="d_submit">
+				<button type=submit>작성</button>
+			</div>
+		</form>
+		<div id = "d_list">
+			<a href="javascript:history.back();"><button>이전으로</button></a>
+		</div>
+	</div>
+</body></center>
+</html>
