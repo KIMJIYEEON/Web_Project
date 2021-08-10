@@ -1,0 +1,72 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.text.*"%>
+
+<%
+	String url = "jdbc:mysql://localhost/kimjeey1020";
+	String id = "kimjeey1020";
+	String pw = "KSkimjeey1020M";
+	Connection conn = null;
+
+	PreparedStatement pstmt3 = null;
+	PreparedStatement pstmt4 = null;
+
+	try{
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(url, id, pw);
+		//out.println("Mysql successfully connected !");
+		request.setCharacterEncoding("utf-8");
+
+		String sql4 = "alter table list auto_increment = 1";
+		pstmt4 = conn.prepareStatement(sql4);
+		pstmt4.executeUpdate();
+
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+		String name = request.getParameter("name");
+		String pwd = request.getParameter("pwd");
+		
+		java.util.Date today = new java.util.Date();        
+		SimpleDateFormat date_f = new SimpleDateFormat("yyyy-MM-dd");
+		String date = date_f.format(today);
+		String ip = request.getRemoteAddr();
+
+		if(title != "" && content != "" && name != "" && pwd != "") {
+			String sql3 = "insert into list(title, name, date, see, content, pwd, ip) values(?, ?, ?, 0, ?, ?, ?)";
+			pstmt3 = conn.prepareStatement(sql3);
+			pstmt3.setString(1, title);
+			pstmt3.setString(2, name);
+			pstmt3.setString(3, date);
+			pstmt3.setString(4, content);
+			pstmt3.setString(5, pwd);
+			pstmt3.setString(6, ip);
+			pstmt3.executeUpdate();
+
+ %>
+			<script>
+				alert('글이 작성되었습니다.');
+				location.href="board_list.jsp?p=1";
+			</script>
+<%
+		}
+		else {
+%>
+			<script>
+				alert('글 작성을 실패하였습니다.');
+				history.back();
+			</script>
+<%
+		}
+	}catch(Exception e) {
+			out.println("Connection failed !<br>");
+			out.println(e.getMessage());
+		}
+		finally {
+			if(pstmt3 != null)try{pstmt3.close();}catch(SQLException ex){}
+			if(pstmt4 != null)try{pstmt4.close();}catch(SQLException ex){}
+
+			if(conn != null)try{conn.close();}catch(SQLException ex){}
+		}
+%>

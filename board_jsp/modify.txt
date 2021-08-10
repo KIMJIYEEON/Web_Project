@@ -1,0 +1,48 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.text.*"%>
+
+<%
+	String url = "jdbc:mysql://localhost/kimjeey1020";
+	String id = "kimjeey1020";
+	String pw = "KSkimjeey1020M";
+	Connection conn = null;
+	PreparedStatement pstmt1 = null;
+	ResultSet rs1 = null;
+
+	try{
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(url, id, pw);
+		//out.println("Mysql successfully connected !");
+		request.setCharacterEncoding("utf-8");
+
+		int num = Integer.parseInt(request.getParameter("num"));
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+
+		String sql1 = "update list set title = ?, content = ? where num = ?";
+		pstmt1 = conn.prepareStatement(sql1);
+		pstmt1.setString(1, title);
+		pstmt1.setString(2, content);
+		pstmt1.setInt(3, num);
+		pstmt1.executeUpdate();
+%>
+		<script>
+			alert('수정 완료!');
+			location.href='board_read.jsp?num=<%=num%>';
+		</script>
+<%
+		}catch(Exception e) {
+			out.println("Connection failed !<br>");
+			out.println(e.getMessage());
+		}
+		finally {
+
+			if(rs1 != null)try{rs1.close();}catch(SQLException ex){}
+			if(pstmt1 != null)try{pstmt1.close();}catch(SQLException ex){}
+
+			if(conn != null)try{conn.close();}catch(SQLException ex){}
+		}
+%>

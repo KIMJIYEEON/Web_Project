@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.text.*"%>
+
+<%
+	String url = "jdbc:mysql://localhost/kimjeey1020";
+	String id = "kimjeey1020";
+	String pw = "KSkimjeey1020M";
+	Connection conn = null;
+	PreparedStatement pstmt1 = null;
+	ResultSet rs1 = null;
+
+	try{
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(url, id, pw);
+		//out.println("Mysql successfully connected !");
+		request.setCharacterEncoding("utf-8");
+
+		int num = Integer.parseInt(request.getParameter("num"));
+		int c_num = Integer.parseInt(request.getParameter("c_num"));
+		String c_pwd = request.getParameter("c_pwd");
+		String sql1 = "select * from comment where c_num = ?";
+		pstmt1 = conn.prepareStatement(sql1);
+		pstmt1.setInt(1, c_num);
+		rs1 = pstmt1.executeQuery();
+
+		if(rs1.next()) {
+			String content = rs1.getString("content");
+			String c_dbpwd = rs1.getString("pwd");
+
+			if(c_dbpwd.equals(c_pwd)) {
+%>
+<html>
+<head>
+<style>
+	body { background: #E6DFF0; }
+	button { background: #C1ABDB; }
+</style>
+</head>
+<body>
+	<center>
+	<h2 style="color: #715692;	margin-top: 50px;">댓글 수정</h2>
+	<table border="0">
+		<form action="c_modify.jsp" method="POST">	
+		<tr>
+			<td width="590" rowspan="2">
+				<div id = "c_writecontent">
+					<textarea name="writecontent" rows="5" cols="82" style="overflow-x: hidden; overflow-y: scroll; resize: none;"><%=content%></textarea>
+				</div>
+			</td>
+			<td width="160" rowspan="2">
+				<button type=submit style="width: 160px; height: 80px;">수정</button>
+			</td>
+		</tr>
+		<input type=hidden name="num" value="<%=num%>"></input>
+		<input type=hidden name="c_num" value="<%=c_num%>"></input>
+		</form>
+	</table>
+	</center>
+</body>
+</html>
+<%
+			}
+			else {
+%>
+				<script>
+					alert('비밀번호가 틀립니다.');
+					location.href="board_read.jsp?num=<%=num%>";
+				</script>
+<%
+			}
+		}
+		}catch(Exception e) {
+			out.println("Connection failed !<br>");
+			out.println(e.getMessage());
+			out.println(e.getClass().getName());
+		}
+		finally {
+
+			if(rs1 != null)try{rs1.close();}catch(SQLException ex){}
+			if(pstmt1 != null)try{pstmt1.close();}catch(SQLException ex){}
+
+			if(conn != null)try{conn.close();}catch(SQLException ex){}
+		}
+%>

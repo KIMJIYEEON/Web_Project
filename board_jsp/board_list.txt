@@ -1,0 +1,171 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.text.*"%>
+
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #E6DFF0; }
+	table { background: white; border-top: 1px solid #444444; border-collapse: collapse; }
+  	th, td { border-bottom: 1px solid #444444; }
+	a { color: #715692; text-decoration: none; }
+	a:hover { color: #C1ABDB; }
+	h1 { color: #715692;	padding: 20px; margin-top: 2%; }
+	#top { margin-left: 44.5%; }
+	#middle { padding: 10px; margin-bottom: 10px; }
+	thead { background: #C1ABDB; }
+	form { padding: 10px; }
+	button { background: #C1ABDB; width: 100px; height: 35px; }
+	input { height: 25px; }
+</style>
+</head>
+<center><body>
+<%
+		//DB에 연결
+		String url = "jdbc:mysql://localhost/kimjeey1020";
+		String id = "kimjeey1020";
+		String pw = "KSkimjeey1020M";
+		Connection conn = null;
+		PreparedStatement pstmt1 = null;
+		PreparedStatement pstmt2 = null;
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(url, id, pw);
+			//out.println("Mysql successfully connected !");
+%>
+
+<h1>게시판</h1>
+<div id="board">
+	<!--상단(글쓰기 버튼)-->
+	<div id="top">
+
+	</div>
+	<!--중단(글 목록)-->
+	<div id="middle" style="width: 940px;">
+		<a href="board_write.jsp" style="float: right;"><button>글쓰기</button></a><br/><br/>
+	<table border="0">
+		<thead>
+		<tr>
+			<th width="80" height="40">번호</th>
+         	<th width="500">제목</th>
+      	   	<th width="120">작성자</th>
+      	   	<th width="120">작성일</th>
+         	<th width="120">조회수</th>
+		</tr>
+		</thead>
+<%
+		request.setCharacterEncoding("utf-8");
+
+		final int seelist = 10;
+		int p = 1;
+
+		if(request.getParameter("p") != null) {
+				p = Integer.parseInt(request.getParameter("p"));
+			}
+			else {
+				p = 1;
+			}
+			String sql1 = "select count(*) from list";
+			pstmt1 = conn.prepareStatement(sql1);
+			rs1 = pstmt1.executeQuery();
+			int total_num = 0;
+			if(rs1.next()) {
+       		total_num = rs1.getInt("count(*)");
+			}
+			
+			//total page
+			int cnt_page = (int)(Math.ceil(total_num/seelist));
+
+			int start_num = (p - 1) * seelist;
+			int end_num = total_num / seelist;
+			if((total_num % seelist) != 0) end_num++;
+			
+			String sql2 = "select * from list order by num desc limit ?, ?";
+			pstmt2 = conn.prepareStatement(sql2);
+			pstmt2.setInt(1, start_num);
+			pstmt2.setInt(2, seelist);
+			rs2 = pstmt2.executeQuery();
+
+			int no = total_num;
+			int number;
+
+			while(rs2.next()) {
+				number = no - (p - 1) * seelist;
+
+				int num = rs2.getInt("num");
+				String title = rs2.getString("title");
+				String name = rs2.getString("name");
+				String date = rs2.getString("date");
+				int see = rs2.getInt("see");
+%>
+				<tbody style="text-align: center;">
+					<tr>
+					<td height="30"><%=number%></td>
+			 	<td height="30">
+						<a href="<%=request.getContextPath()%>/kimjeey1020/project/board_read.jsp?num=<%=num%>">
+						<%=title%>
+						</a>
+					</td>
+		      	   	<td height="30"><%=name%></td>
+		      	   	<td height="30"><%=date%></td>
+			 	<td height="30"><%=see%></td>
+					</tr>
+				</tbody>
+<%
+			no--;
+			}
+%>
+	</table>
+	</div>
+	<!--하단(페이지, 검색)-->
+	<div id="bottom">
+			<a href='board_list.jsp?p=1'><b>[처음] </b></a>
+<%
+			int i=1;
+
+			for(i=1; i<=end_num; i++) { 
+				if(p == i) {
+%>
+					<b><u> <%=i %></u></b>
+<%
+				}
+				else {
+%>
+					<a href="<%=request.getContextPath() %>/kimjeey1020/project/board_list.jsp?p=<%=i%>"><b> <%=i%> </b></a>
+<%
+				}
+			}
+%>
+			<a href="<%=request.getContextPath()%>/kimjeey1020/project/board_list.jsp?p=<%=end_num%>"><b> [끝]</b></a>
+<%
+		}catch(Exception e) {
+			out.println("Connection failed !<br>");
+			out.println(e.getMessage());
+		}
+		finally {
+			if(rs1 != null)try{rs1.close();}catch(SQLException ex){}
+			if(pstmt1 != null)try{pstmt1.close();}catch(SQLException ex){}
+			if(rs2 != null)try{rs2.close();}catch(SQLException ex){}
+			if(pstmt2 != null)try{pstmt2.close();}catch(SQLException ex){}
+			if(conn != null)try{conn.close();}catch(SQLException ex){}
+		}
+%>
+
+		<form action="search.jsp" method="GET">
+	      <select name="option" style="height: 25px;">
+			<option value="title">제목</option>
+			<option value="name">작성자</option>
+	      </select>
+			<input type=text name="search"></input>
+			<button type=submit style="height: 25px; margin-top: 20px;">Search</button>
+		</form>
+	</div>
+</div>
+</body></center>
+</html>

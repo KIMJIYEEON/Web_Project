@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.text.*"%>
+
+<%
+	String url = "jdbc:mysql://localhost/kimjeey1020";
+	String id = "kimjeey1020";
+	String pw = "KSkimjeey1020M";
+	Connection conn = null;
+	PreparedStatement pstmt1 = null;
+
+	try{
+		Class.forName("com.mysql.jdbc.Driver");
+		conn = DriverManager.getConnection(url, id, pw);
+		//out.println("Mysql successfully connected !");
+		request.setCharacterEncoding("utf-8");
+		
+		int num = Integer.parseInt(request.getParameter("num"));
+		int c_num = Integer.parseInt(request.getParameter("c_num"));
+		String c_content = request.getParameter("writecontent");
+
+		String sql1 = "update comment set content = ? where c_num = ?";
+		pstmt1 = conn.prepareStatement(sql1);
+		pstmt1.setString(1, c_content);
+		pstmt1.setInt(2, c_num);
+		pstmt1.executeUpdate();
+%>
+		<script>
+			alert('수정 완료!');
+			location.href="board_read.jsp?num=<%=num%>";
+		</script>
+<%
+	}catch(Exception e) {
+		out.println("Connection failed !<br>");
+		out.println(e.getMessage());
+	}
+	finally {
+		if(pstmt1 != null)try{pstmt1.close();}catch(SQLException ex){}
+		if(conn != null)try{conn.close();}catch(SQLException ex){}
+	}
+%>
