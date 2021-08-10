@@ -1,0 +1,141 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F3FAE3; }
+	table { background: white; border-top: 1px solid #444444; border-collapse: collapse; margin-top: 45px; }
+  	th, td { border-bottom: 1px solid #444444; }
+	a { color: #93CE0C; text-decoration: none; }
+	a:hover { color: #D5ECA1; }
+	h1 { color: #93CE0C;	padding: 20px; margin-top: 20px; }
+	#middle { padding: 10px; margin-bottom: 10px; }
+	thead { background: 	#D5ECA1; }
+	form { padding: 10px; }
+	button { background: #D5ECA1; width: 100px; height: 30px; }
+	input[type=text] { width: 200px; height: 30px; }
+</style>
+</head>
+<center><body>
+	<?php
+		//DB에 연결
+		$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+		//DB 연결 체크
+		if ($mysqli->connect_errno) {
+	    	printf("Connect failed: %s\n", $mysqli->connect_error);
+	    	exit();
+		} 
+		//print("Successfully connected !\n");
+		//DB 선택
+		$dbname = "kimjeey1020";
+		mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+	?>
+
+<h1>서울시 문화공간 검색</h1>
+<div id="board">
+	<!--상단(search, checkbox)-->
+	<div id="top">
+		<form action="culture_search.php" method="GET">
+			<input type=text name="search"></input>
+			<button type=submit>검색</button><br/><br/>
+
+			<input type=checkbox value="code" name="check">문화공간코드</input>
+			<input type=checkbox value="genre" name="check">장르</input>
+			<input type=checkbox value="name" name="check">문화공간명</input>
+			<input type=checkbox value="address" name="check">주소</input>
+			<input type=checkbox value="tel" name="check">전화번호</input>
+			<input type=checkbox value="rest" name="check">휴관일</input>
+		</form>
+	</div>
+	<!--중단(list)-->
+	<div id="middle" style="width:1600px;">
+		<a href='culture_record.php'><button type=submit style="float: right; margin-left: 10px;">검색기록</button></a>
+		<a href='culture_popular.php'><button type=submit formaction="culture_popular.php" style="float: right;">인기검색어</button></a>
+	<table border="0">
+		<thead>
+		<tr>
+         	<th width="150" height="40">문화공간코드</th>
+      	   	<th width="150">장르</th>
+      	   	<th width="350">문화공간명</th>
+         	<th width="500">주소</th>
+      	   	<th width="200">전화번호</th>
+         	<th width="300">휴관일</th>
+		</tr>
+		</thead>
+		<?php
+			if(isset($_GET['page'])) {
+				$page = trim(strip_tags(addslashes($_GET['page'])));
+			}
+			else {
+				$page = 1;
+			}
+			$query1 = "select * from culture";
+			$result = mysqli_query($link, $query1)or die("query1 error(culture)");
+			$total_num = mysqli_num_rows($result);
+			$seelist = 17;
+			$seeblock = 15;
+
+			//now block
+			$block = ceil($page/$seeblock);
+
+			//now block-start block num/end block num
+			$start_block = (($block - 1) * $seeblock) + 1;
+			$end_block = $start_block + $seeblock - 1;
+
+			//total page/total block
+			$cnt_page = ceil($total_num/$seelist);
+			$cnt_block = ceil($cnt_page/$seeblock);
+
+			if($end_block > $cnt_page) $end_block = $cnt_page;
+			$start_num= ($page - 1) * $seelist;
+
+			$query2 = "select * from culture order by genre limit $start_num, $seelist";
+			$result = mysqli_query($link, $query2)or die("query2 error(culture)");
+
+			while($row=mysqli_fetch_assoc($result)) {
+		?>
+		<tbody style="text-align: center;">
+			<tr>
+			<td height="30"><?php echo $row['c_code']; ?></td>
+         	<td><?php echo $row['genre']; ?></td>
+      	   	<td><?php echo $row['name']; ?></td>
+      	   	<td><?php echo $row['address']; ?></td>
+         	<td><?php echo $row['tel']; ?></td>
+         	<td><?php echo $row['rest']; ?></td>
+			</tr>
+		</tbody>
+		<?php
+			}
+		?>
+	</table>
+	</div>
+	<!--하단(page)-->
+	<div id="bottom">
+		<?php
+			echo "<a href='$_SERVER[PHP_SELF]?page=1'>[처음] </a>"; 
+			if($page > 1) {
+				$pre = $page - 1;
+				echo "<a href='$_SERVER[PHP_SELF]?page=$pre'>[이전] </a>"; 
+			}
+
+			for($i=$start_block; $i<=$end_block; $i++) {
+				if($page == $i) {
+					echo "<b><u> $i</u></b>";
+				}
+				else {
+					echo "<a href='$_SERVER[PHP_SELF]?page=$i'><b> $i </b></a>";
+				}
+			}
+
+			if($block < $cnt_block || $page < $cnt_page) {
+				$next = $page + 1;
+				echo "<a href='$_SERVER[PHP_SELF]?page=$next'> [다음]</a>";
+			}
+			echo "<a href='$_SERVER[PHP_SELF]?page=$cnt_page'> [끝]</a>";
+
+			mysqli_close($link);
+		?>
+	</div>
+</div>
+</body></center>
+</html>

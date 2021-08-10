@@ -1,0 +1,61 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F3FAE3; }
+	h1 { color: #93CE0C;	padding: 20px; margin-top: 2%; }
+	table { background: white; border-top: 1px solid #444444; border-collapse: collapse; }
+  	th, td { border-bottom: 1px solid #444444; }
+	thead { background: #D5ECA1; }
+	button { background: #D5ECA1; width: 100px; height: 35px; }
+	#bottom { margin-top: 20px; }
+	#d_list { padding: 30px; }
+</style>
+</head>
+<center><body>
+	<h1>인기검색어 TOP 5</h1>
+	<table border="0">
+	<thead>
+	<tr>
+      	<th width="200" height="40">순위</th>
+      	<th width="300" height="40">검색어</th>
+      	<th width="200" height="40">검색 횟수</th>
+	</tr>
+	</thead>
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+	$query = "select search, count(search) from user group by search order by count(search) desc limit 5";
+	$result = mysqli_query($link, $query) or die("query error(culture_popular)");
+
+	while($row=mysqli_fetch_assoc($result)) {
+		$num++;
+?>
+		<tbody style="text-align: center;">
+			<tr>
+			<td height="30"><?php echo $num; ?></td>
+			<td height="30"><?php echo $row['search']; ?></td>
+			<td height="30"><?php echo $row['count(search)']; ?></td>
+			</tr>
+		</tbody>
+<?php
+	}
+	mysqli_close($link);
+?>
+	</table>
+	<div id = "d_list">
+		<a href="culture.php?page=1"><button>목록으로</button></a>
+	</div>
+</body></center>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE>
+<html>
+<head>
+<style>
+	body { background: #F3FAE3; }
+	h1 { color: #93CE0C;	padding: 20px; margin-top: 2%; }
+	table { background: white; border-top: 1px solid #444444; border-collapse: collapse; }
+  	th, td { border-bottom: 1px solid #444444; }
+	a { color: #93CE0C; text-decoration: none; }
+	a:hover { color: #FFB6C1; }
+	thead { background: #D5ECA1; }
+	button { background: #D5ECA1; width: 100px; height: 35px; }
+	#bottom { margin-top: 20px; }
+	#d_list { padding: 30px; }
+</style>
+</head>
+<center><body>
+	<h1>검색 결과</h1>
+	<div id="middle">
+	<table border="0">
+	<thead>
+	<tr>
+      	<th width="150" height="40">문화공간코드</th>
+   	   	<th width="150">장르</th>
+   	   	<th width="350">문화공간명</th>
+      	<th width="500">주소</th>
+   	   	<th width="200">전화번호</th>
+      	<th width="300">휴관일</th>
+	</tr>
+	</thead>
+<?php
+	//DB에 연결
+	$link = new mysqli("localhost", "kimjeey1020", "KSkimjeey1020M", "kimjeey1020");
+
+	//DB 연결 체크
+	if ($mysqli->connect_errno) {
+    	printf("Connect failed: %s\n", $mysqli->connect_error);
+    	exit();
+	} 
+	//print("Successfully connected !\n");
+	//DB 선택
+	$dbname = "kimjeey1020";
+	mysqli_select_db($link, $dbname) or die($dbname." open failed!");
+
+	if(isset($_GET['page'])) {
+		$page = $_GET['page'];
+	}
+	else {
+		$page = 1;
+	}
+
+	$ip = $_SERVER["REMOTE_ADDR"];
+	$check = trim(strip_tags(addslashes($_GET['check'])));
+	$search = trim(strip_tags(addslashes($_GET['search'])));
+
+	$query4 = "insert into user(ip, search) values('".$ip."', '".$search."')";
+	mysqli_query($link, $query4)or die("query4 error(culture_search)");
+	
+	//체크박스가 다중일 경우 다중 값을 GET으로 받아오기 위함
+	if(isset($check)) {
+		$String .= '&amp;check=' . $check;
+	}
+	if(isset($search)) {
+		$String .= '&amp;search=' . $search;
+	}
+
+	$query1 = "select * from culture";
+	$result = mysqli_query($link, $query1)or die("query1 error(culture_search)");
+	$row1 = mysqli_fetch_assoc($result);
+
+	if(empty($check) && $page == 1) {
+?>
+			<tr>
+				<td height="30" colspan="6" style="text-align: center;">검색 항목을 선택해주세요.</td>
+			</tr>
+			</table>
+			<div id = "d_list">
+				<a href="culture.php?page=1"><button>목록으로</button></a>
+			</div>
+<?php
+	}
+	else if(isset($search)) {
+		$query2 = "select * from culture where $check like '%$search%'";
+		$result2 = mysqli_query($link, $query2)or die("query2 error(culture_search), $check, $search");
+		$number = mysqli_num_rows($result2);
+
+		if(empty($number)) {
+?>
+			<tr>
+				<td height="30" colspan="6" style="text-align: center;">일치하는 검색 결과가 없습니다.</td>
+			</tr>
+<?php
+		}
+		else if(empty($search)) {
+?>
+			<tr>
+				<td height="30" colspan="6" style="text-align: center;">검색어를 입력해주세요.</td>
+			</tr>
+<?php
+		}
+		else {
+		$total_num = mysqli_num_rows($result2);
+		$seelist = 17;
+		$seeblock = 15;
+
+		//now block
+		$block = ceil($page/$seeblock);
+
+		//now block-start block num/end block num
+		$start_block = (($block - 1) * $seeblock) + 1;
+		$end_block = $start_block + $seeblock - 1;
+
+		//total page/total block
+		$cnt_page = ceil($total_num/$seelist);
+		$cnt_block = ceil($cnt_page/$seeblock);
+
+		if($end_block > $cnt_page) $end_block = $cnt_page;
+		$start_num= ($page - 1) * $seeblock;
+
+		$query3 = "select * from culture where $check like '%$search%' order by genre limit $start_num, $seelist";
+		$result3 = mysqli_query($link, $query3)or die("query3 error(culture_search)");
+
+			while($row2=mysqli_fetch_assoc($result3)) {
+?>
+			<tbody style="text-align: center;">
+				<tr>
+				<td width="150" height="30"><?php echo $row2['c_code']; ?></td>
+				<td width="150"><?php echo $row2['genre'] ?></td>
+				<td width="350"><?php echo $row2['name']; ?></td>
+	     	   	<td width="200"><?php echo $row2['address']; ?></td>
+	     	   	<td width="200"><?php echo $row2['tel']; ?></td>
+				<td width="300"><?php echo $row2['rest']; ?></td>
+				</tr>
+			</tbody>
+<?php
+			}
+?>
+			</table>
+			<div id="bottom">
+			<?php
+				echo "<a href='$_SERVER[PHP_SELF]?page=1$String'>[처음] </a>"; 
+				if($page > 1) {
+					$pre = $page - 1;
+					echo "<a href='$_SERVER[PHP_SELF]?page=$pre$String'>[이전] </a>"; 
+				}
+
+				for($i=$start_block; $i<=$end_block; $i++) {
+					if($page == $i) {
+						echo "<b><u> $i</u></b>";
+					}
+					else {
+						echo "<a href='$_SERVER[PHP_SELF]?page=$i$String'><b> $i </b></a>";
+					}
+				}
+
+				if($block < $cnt_block || $page < $cnt_page) {
+					$next = $page + 1;
+					echo "<a href='$_SERVER[PHP_SELF]?page=$next$String'> [다음]</a>";
+				}
+				echo "<a href='$_SERVER[PHP_SELF]?page=$cnt_page$String'> [끝]</a>";
+			?>
+			</div>
+<?php
+		}
+?>
+	</table>
+	<div id = "d_list">
+		<a href="culture.php?page=1"><button>목록으로</button></a>
+	</div>
+</body></center>
+</html>
+<?php
+		} 
+		mysqli_close($link);
+?>
