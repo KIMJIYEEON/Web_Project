@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Concert+One|Maven+Pro&display=swap" rel="stylesheet">
+    <title>Chat</title>
+    <style>
+        img {
+            position: fixed;
+            left: 210px;
+            top: 240px;
+        }
+
+        /*채팅방 이름*/
+        .chatname {
+            height: 40px;
+            width: 759px;
+            border: 0;
+            outline: 0;
+            color: white;
+            background: #e98da9;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            margin-top: 80px;
+        }
+
+        ::-webkit-input-placeholder {
+            color: white;
+            font-size: 16px;
+        }
+
+        /*인원 수*/
+        .people {
+            width: 111px;
+            height: 40px;
+            border: 0;
+            outline: 0;
+            color: white;
+            background: #e98da9;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            ;
+            margin-top: 80px;
+            margin-left: -6px;
+        }
+
+        /*채팅창*/
+        #myTextarea {
+            width: 866px;
+            height: 530px;
+            border: 0;
+            outline: 0;
+            margin-left: 511px;
+            margin-top: -6px;
+            font-size: 20px;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+        }
+
+        /*나가기*/
+        .exit {
+            width: 40px;
+            height: 120px;
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            margin-top: -6px;
+            margin-left: -262px;
+        }
+
+        /*채팅 입력창*/
+        #myText {
+            background-color: #fde8ee;
+            width: 759px;
+            height: 90px;
+            border: 0;
+            outline: 0;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            margin-top: -5px;
+            font-size: 20px;
+        }
+
+        /*send 버튼*/
+        .btn {
+            display: block;
+            line-height: 40px;
+            border: 0;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.9s, color 0.3s;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            margin-top: -5px;
+        }
+
+            .btn:hover {
+                color: #fff;
+            }
+
+        .send:hover {
+            box-shadow: 200px 0 0 0 rgba(255,255,255,0.5) inset, -200px 0 0 0 rgba(255,255,255,0.5) inset;
+        }
+
+        body {
+            background-color: #ffdee8;
+        }
+    </style>
+
+    <script>
+        var msg_count = 0;
+        var myTextarea, myText;
+		var userid = "";
+		var getCookie = function(name) {
+			var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+			return value? value[2] : null;
+		};
+
+
+        function sendMsg() {
+            var xhr = false;
+            if (window.ActiveXObject)
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            else if (window.XMLHttpRequest)
+                xhr = new XMLHttpRequest();
+            if (xhr) {
+                var msg = "/input?userid="+userid+"&msg=" + myText.value;
+                xhr.open("GET", msg);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        $("#myTextarea").append( $("#myText").val() + "\n");
+                    }
+                }
+                msg_count++;
+                xhr.send(null);
+            }
+        }
+        function checkMessage() {
+            var xhr = false;
+            if (window.ActiveXObject)
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            else if (window.XMLHttpRequest)
+                xhr = new XMLHttpRequest();
+            if (xhr) {
+                var msg = "/getMessage?count=" + msg_count;
+                xhr.open("GET", msg);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var sendObj = JSON.parse(xhr.responseText);
+                        for (var i = 0; i < sendObj.msgs.length; ++i)
+                            $("#myTextarea").append( sendObj.names[i] + "> " + sendObj.msgs[i] + "\n");
+                        msg_count += sendObj.msgs.length;
+                    }
+                }
+                xhr.send(null);
+            }
+        }
+
+        window.onload = function () {
+			userid = getCookie("userid");
+            myTextarea = document.getElementById("myTextarea");
+            myText = document.getElementById("myText");
+            setInterval(function () {
+                checkMessage();
+            }, 2000);
+        }
+
+		function exitbtn(){
+			var exit = document.chatform;
+			exit.action = "chatlist.html";
+			if (exit)
+           {
+
+           }
+
+        }
+    </script>
+</head>
+<body>
+    <img src="ap.png" width="330" height="580" />
+    <form name="chatform">
+        <div class="chatting" align="center">
+            <!--채팅방 이름-->
+            <div class="left1" style="float:left; width: 67%;">
+                <table align="center" style="float:right; ">
+                    <tr> <td><input placeholder=" Chat Room 3" class="chatname"> </td> </tr>
+                </table>
+            </div>
+            <!--접속자 수-->
+            <div class="right1" style="float:left; width: 33%;">
+                <table align="center" style="float:left;">
+                    <tr> <td> <input value="" class="people"> </td> </tr>
+                </table>
+            </div>
+            <!--채팅창, 나가기 버튼-->
+            <div class="center1" style="width: 100%;">
+                <table align="center" style="float:left;">
+                    <tr> <td> <textarea id="myTextarea" rows="30" cols="30"> </textarea> </td> </tr>
+                </table>
+                <table>
+                    <tr> <td> <button class="exit" name="btn exit" style=" background-color:#f7bbcd; color:white; font-size: 15px; " onclick="exitbtn()">e<br>x<br>i<br>t</button> </td> </tr>
+                </table>
+            </div>
+            <!--채팅 입력창-->
+            <div class="left2" style="float:left; width: 67%;">
+                <table align="center" style="float:right; ">
+                    <tr> <td> <input type="text" id="myText"> </td> </tr>
+                </table>
+            </div>
+            <!--send 버튼-->
+            <div class="right2" style="float:left; width: 33%;">
+                <table align="center" style="float:left; ">
+                    <tr> <td> <button class="btn send" name="send" style=" height:92px; width:105px; background-color:#e98da9; color:white; font-size:18px;" onclick="sendMsg()">send</button> </td> </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

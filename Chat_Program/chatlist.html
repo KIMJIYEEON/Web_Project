@@ -1,0 +1,169 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.7.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Concert+One|Maven+Pro&display=swap" rel="stylesheet">
+    <title>ChatList</title>
+    <style>
+        .listbox {
+            width: 900px;
+            height: 600px;
+            background-color: white;
+            position: absolute;
+            margin-top: 130px;
+            margin-left: 400px;
+        }
+
+        /*채팅 리스트*/
+        .list {
+            width: 900px;
+            height: 500px;
+            margin-top: -23px;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            font-size: 18px;
+            color: #6c6c6c;
+        }
+
+        /*Chat list 텍스트 부분*/
+        .chattext {
+            background-color: #e98da9;
+            color: white;
+            padding-top: 2px;
+            padding-left: 10px;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+        }
+
+        /*JOIN 버튼*/
+        button {
+            border: 0;
+            outline: 0;
+            text-align: center;
+            cursor: pointer;
+            color: #6c6c6c;
+            font-size: 15px;
+            transition: all 0.9s, color 0.3s;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+        }
+
+            button:hover {
+                color: #fff;
+            }
+
+        img {
+            margin-top: 372px;
+            margin-left: -15px;
+        }
+
+        /*create 버튼*/
+        .btn {
+            display: block;
+            line-height: 40px;
+            border: 0;
+            outline: 0;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.9s, color 0.3s;
+            font-family: 'Maven Pro', sans-serif;
+            font-family: 'Concert One', cursive;
+            position: absolute;
+            margin-top: -15px;
+            margin-left: -10px;
+        }
+
+            .btn:hover {
+                color: #fff;
+            }
+
+        .create:hover {
+            box-shadow: 200px 0 0 0 rgba(255,255,255,0.5) inset, -200px 0 0 0 rgba(255,255,255,0.5) inset;
+        }
+
+        body {
+            background-color: #ffdee8;
+        }
+    </style>
+    <script>
+        function chatcreate(){
+           var chatname = prompt("채팅방 이름을 입력해주세요.");
+
+           if (chatname) // 확인 버튼을 눌렀을 때
+           {
+               document.location.href = "chat.html";
+           }
+           else // 취소 버튼을 눌렀을 때
+           {
+
+           }
+        }
+
+        // 첫번째 방 이동 함수
+        function room_one() {
+
+            var btn_one = document.chatlist;
+
+            chatlist.action = "chat1.html";
+        }
+        // 두번째 방 이동 함수
+        function room_two() {
+
+            var btn_one = document.chatlist;
+
+            chatlist.action = "chat2.html";
+        }
+        // 세번째 방 이동 함수
+        function room_three() {
+
+            var btn_one = document.chatlist;
+
+            chatlist.action = "chat3.html";
+        }
+
+        // 채팅리스트 색 설정
+        $(document).ready(function () {
+            $('tr:odd').css('background', '#FFFFFF');
+            $('tr:even').css('background', '#ffeaf1');
+
+            $('tr:first').css('background', '#ffcbdb').css('color', '#FFFFFF');
+        });
+    </script>
+</head>
+<body>
+    <div class="left" style="float: left; width: 70%">
+        <!--채팅목록-->
+        <div class="listbox">
+            <div class="chattext">
+                <h1>Chat List</h1>
+            </div>
+            <form name="chatlist" method="get">
+                <table class="list">
+                    <tr><th height="10">Number</th><th>Name</th><th></th></tr>
+                    <tr><th height="">1</th><th width="500">Chat Room 1</th><th><button class="one" style="background-color: white;" onclick="room_one();">JOIN</button></th></tr>
+                    <tr><th height="">2</th><th>Chat Room 2</th><th><button class="two" style="background-color: #ffeaf1;" onclick="room_two();">JOIN</button></th></tr>
+                    <tr><th height="">3</th><th>Chat Room 3</th><th><button class="three" style="background-color: white;" onclick="room_three();">JOIN</button></th></tr>
+                    <tr><th height="">4</th><th></th><th></th></tr>
+                    <tr><th height="">5</th><th></th><th></th></tr>
+                    <tr><th height="">6</th><th></th><th></th></tr>
+                    <tr><th height="">7</th><th></th><th></th></tr>
+                    <tr><th height="">8</th><th></th><th></th></tr>
+                    <tr><th height="">9</th><th></th><th></th></tr>
+                    <tr><th height="">10</th><th></th><th></th></tr>
+                    <tr><th height="50"></th><th></th><th></th></tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="right" style="float: right; width: 30%">
+        <img src="ap2.png" width="250" height="250" />
+        <!--채팅방 생성 버튼-->
+        <div class="btn create">
+            <button class="btn create" name="create" style=" height:135px; width:200px; background-color:#e98da9; color:white; font-size: 23px; " onclick="chatcreate()">create</button>
+        </div>
+    </div>
+</body>
+</html>

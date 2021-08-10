@@ -1,0 +1,37 @@
+var express = require("express");
+var bodyParser = require("body-parser");
+var app = express();
+app.use( express.static("public") );
+app.use( bodyParser.urlencoded( {extended:false} ) );
+
+////////////////////////////////////////////////////////
+
+var messages = new Array();
+var userids = new Array();
+
+app.all("/input", function(request, response) {
+	var msg = request.query.msg;
+	var userid = request.query.userid;
+	messages.push(msg);
+	userids.push(userid);
+	console.log("received : "+msg);
+	console.log("received : "+userid);
+    response.send("OK");
+});
+
+app.all("/getMessage", function(request, response) {
+	var count = request.query.count; 
+	var sendObj = { names: null, msgs: null};
+	if ( messages.length > count ) {
+		sendObj.names = userids.slice(count); 
+		sendObj.msgs = messages.slice(count);
+		
+	}
+	response.send(JSON.stringify(sendObj));  	
+	console.log("send messages : " + JSON.stringify(sendObj));
+});
+
+//////////////////////////////////////////////////
+app.listen(80, function() {
+   console.log('Server Running at http://127.0.0.1');
+});	                                                
