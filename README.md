@@ -26,7 +26,7 @@
 ![image](https://user-images.githubusercontent.com/39723658/156744290-dd68b842-414a-4b63-9c63-73b09992c0f5.png)
 
 
-## 6. Movie Reminder
+## 6. Movie Reminder(moview)
 기술 스택:HTML, CSS, Javascript, JQuery, PHP
 
 ![image](https://user-images.githubusercontent.com/39723658/156745120-4385a0eb-76f1-4d6d-80ef-6f8b4c77e6c9.png)
